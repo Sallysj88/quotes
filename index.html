@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISBN Quote Request</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ISBN Quote Request</h1>
+        <form id="isbn-quote-form">
+            <!-- Customer Identification -->
+            <div class="form-group">
+                <label for="customer-email">Customer Email</label>
+                <input type="email" id="customer-email" name="customer-email" placeholder="Enter your email (e.g., name@example.com)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="account-number">Account Number</label>
+                <input type="text" id="account-number" name="account-number" placeholder="Enter your account number (if available)">
+            </div>
+
+            <!-- ISBN Fields -->
+            <div class="form-group">
+                <label for="single-isbn">Single ISBN Entry</label>
+                <input type="text" id="single-isbn" name="single-isbn" placeholder="Enter ISBN (e.g., 978-0-123456-78-9)">
+            </div>
+
+            <div class="form-group">
+                <label for="multiple-isbns">Multiple ISBNs</label>
+                <textarea id="multiple-isbns" name="multiple-isbns" rows="4" placeholder="Enter multiple ISBNs (one per line)"></textarea>
+            </div>
+
+            <!-- File Upload -->
+            <div class="form-group upload-box">
+                <label>Upload File (Excel or CSV)</label>
+                <input type="file" id="file-upload" name="file-upload" accept=".csv, .xlsx">
+                <div class="drag-area">
+                    <p>Click to upload or drag and drop</p>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Submit Quote Request</button>
+        </form>
+    </div>
+</body>
+</html>
