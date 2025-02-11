@@ -1,44 +1,46 @@
-// Firebase configuration (from your Firebase project settings)
+// Import Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+
+// Firebase Configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyC03I0askcS6NHThKLbF2sd-swS0Hs43lg",
+    authDomain: "quote-automation-c0de2.firebaseapp.com",
+    projectId: "quote-automation-c0de2",
+    storageBucket: "quote-automation-c0de2.appspot.com",  // ✅ FIXED DOMAIN
+    messagingSenderId: "519166658519",
+    appId: "1:519166658519:web:a654d09e38e42f1b1ced92",
+    measurementId: "G-1YGRXYL4BW"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// Function to handle form submission
-document.getElementById("isbnForm").addEventListener("submit", function (event) {
-  event.preventDefault(); // Prevent default form submission
+// Handle form submission
+document.getElementById("isbn-quote-form").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent default form submission
 
-  // Get form values
-  const email = document.getElementById("email").value;
-  const subAccount = document.getElementById("subAccount").value;
-  const isbnList = document.getElementById("isbnList").value.split("\n"); // Split by new lines for multiple ISBNs
+    // Get input values
+    const email = document.getElementById("customer-email").value;
+    const accountNumber = document.getElementById("account-number").value;
+    const singleISBN = document.getElementById("single-isbn").value;
+    const multipleISBNs = document.getElementById("multiple-isbns").value.split("\n").map(isbn => isbn.trim()).filter(isbn => isbn !== ""); // Convert to array
 
-  // Validate input (basic check)
-  if (!email || !isbnList.length) {
-    alert("Please enter an email and at least one ISBN.");
-    return;
-  }
+    try {
+        // Store data in Firestore
+        await addDoc(collection(db, "quotes"), {
+            email: email,
+            accountNumber: accountNumber || "N/A",
+            singleISBN: singleISBN || "N/A",
+            multipleISBNs: multipleISBNs.length ? multipleISBNs : "N/A",
+            timestamp: new Date()
+        });
 
-  // Store data in Firestore
-  db.collection("quotes").add({
-    email: email,
-    subAccount: subAccount,
-    isbnList: isbnList,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  })
-  .then(() => {
-    alert("ISBNs submitted successfully!");
-    document.getElementById("isbnForm").reset(); // Clear form after submission
-  })
-  .catch((error) => {
-    console.error("Error adding document: ", error);
-  });
+        alert("Quote request submitted successfully!");
+        document.getElementById("isbn-quote-form").reset(); // Clear form
+    } catch (error) {
+        console.error("Error submitting request: ", error);
+        alert("There was an error submitting your request. Please try again.");
+    }
 });
